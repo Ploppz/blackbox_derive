@@ -45,8 +45,8 @@ impl Parse for Variables {
 pub struct Variable {
     pub name: Ident,
     pub ty: Type,
-    pub low: (bool, Lit),
-    pub high: (bool, Lit),
+    pub low: TokenStream,
+    pub high: TokenStream,
 }
 impl Parse for Variable {
     fn parse(input: ParseStream) -> Result<Self> {
@@ -55,11 +55,11 @@ impl Parse for Variable {
         let ty: Type = input.parse()?;
         input.parse::<Token![=]>()?;
 
-        let sign: bool = input.lookahead1().peek(Token![-]);
+        let low_sign: TokenStream = if input.lookahead1().peek(Token![-]) {input.parse::<Token![-]>().unwrap(); quote!{-}} else {quote!{}};
         let low: Lit = input.parse()?;
         input.parse::<Token![..]>()?;
 
-        let sign: bool = input.lookahead1().peek(Token![-]);
+        let high_sign: TokenStream = if input.lookahead1().peek(Token![-]) {input.parse::<Token![-]>().unwrap(); quote!{-}} else {quote!{}};
         let high: Lit = input.parse()?;
 
         // optional ','
@@ -67,8 +67,8 @@ impl Parse for Variable {
         Ok(Variable {
             name,
             ty,
-            low,
-            high
+            low: quote! {#low_sign #low},
+            high: quote! {#high_sign #high},
         })
     }
 }
