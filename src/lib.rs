@@ -13,7 +13,6 @@ use syn::{
     parse::{Parse, ParseStream, Result}
 };
 use blackbox::BlackboxInput;
-use logger::Logger;
 
 mod parse;
 use parse::*;
@@ -70,7 +69,7 @@ pub fn make_optimizer(item: TokenStream) -> TokenStream {
             #( pub #names: #types ),*
         }
         impl blackbox::BlackboxInput for #struct_name {
-            fn evaluate(&self, mut logger: Option<Logger<String>>) -> f64 {
+            fn evaluate(&self, log: Logger) -> f64 {
                 let Self {#( #names4 ),*} = *self;
                 #evaluate
             }
