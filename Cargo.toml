@@ -28,7 +28,7 @@ license = "MIT"
 proc-macro = true
 
 [dependencies]
-blackbox = { path = "../blackbox"}
+blackbox = { git = "https://github.com/Ploppz/blackbox.git" }
 syn = "0.15.27"
 quote = "0.6.11"
 proc-macro2 = "0.4.27"
