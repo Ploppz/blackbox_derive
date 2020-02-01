@@ -8,11 +8,7 @@ extern crate syn;
 extern crate itertools;
 
 use proc_macro::TokenStream;
-use syn::{
-    Type, Ident, Lit,
-    parse::{Parse, ParseStream, Result}
-};
-use blackbox::BlackboxInput;
+use syn::Type;
 
 mod parse;
 use parse::*;
@@ -23,16 +19,12 @@ pub fn make_optimizer(item: TokenStream) -> TokenStream {
     let Optimizer {struct_name, vars, evaluate} = parse_macro_input!(item as Optimizer);
 
     let names = vars.0.iter().map(|x| x.name.clone());
-    let names2 = names.clone();
-    let names3 = names.clone();
     let names4 = names.clone();
     let names5 = names.clone();
     let names6 = names.clone();
     let n_variables = names.len();
 
     let types = vars.0.iter().map(|x| x.ty.clone());
-    let types2 = types.clone();
-    let types3 = types.clone();
 
     let lows = vars.0.iter().map(|x| x.low.clone());
     let highs = vars.0.iter().map(|x| x.high.clone());
@@ -69,7 +61,7 @@ pub fn make_optimizer(item: TokenStream) -> TokenStream {
             #( pub #names: #types ),*
         }
         impl blackbox::BlackboxInput for #struct_name {
-            fn evaluate(&self, log: Logger) -> f64 {
+            fn evaluate(&self, log: slog::Logger) -> f64 {
                 let Self {#( #names4 ),*} = *self;
                 #evaluate
             }
